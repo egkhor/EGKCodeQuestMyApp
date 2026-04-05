@@ -1,0 +1,1615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EGK CodeQuest Malaysia — Coding & Computational Thinking</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Exo+2:ital,wght@0,300;0,400;0,600;1,300&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --egk-blue: #1a6cff;
+    --egk-bright: #4da6ff;
+    --egk-glow: #00aaff;
+    --egk-dark: #040d1a;
+    --egk-card: #070f20;
+    --egk-border: rgba(26,108,255,0.35);
+    --egk-accent: #00e5ff;
+    --gold: #ffd54f;
+    --text: #c8dfff;
+    --text-dim: #6080b0;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--egk-dark);
+    color: var(--text);
+    font-family: 'Exo 2', sans-serif;
+    overflow-x: hidden;
+    cursor: default;
+  }
+
+  /* ─── CANVAS BG ─── */
+  #bg-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* ─── NAV ─── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 40px;
+    background: rgba(4,13,26,0.88);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--egk-border);
+  }
+
+  .nav-logo { display: flex; align-items: center; gap: 12px; }
+  .nav-logo img { height: 44px; filter: drop-shadow(0 0 10px #1a6cff); }
+  .nav-brand {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--egk-bright);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .nav-brand span { color: var(--egk-accent); font-size: 1rem; }
+
+  .nav-links { display: flex; gap: 28px; align-items: center; }
+  .nav-links a {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: var(--text-dim);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color 0.3s;
+  }
+  .nav-links a:hover { color: var(--egk-accent); text-shadow: 0 0 10px var(--egk-accent); }
+  .nav-cta {
+    background: linear-gradient(135deg, #1a6cff, #0044cc);
+    color: #fff !important;
+    padding: 8px 20px;
+    border-radius: 4px;
+    border: 1px solid rgba(77,166,255,0.4);
+    box-shadow: 0 0 14px rgba(26,108,255,0.5);
+  }
+  .nav-cta:hover { box-shadow: 0 0 24px rgba(26,108,255,0.8) !important; color: #fff !important; }
+
+  /* ─── HERO ─── */
+  #hero {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center;
+    padding: 100px 20px 60px;
+    overflow: hidden;
+  }
+
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(0,229,255,0.08);
+    border: 1px solid rgba(0,229,255,0.3);
+    border-radius: 30px;
+    padding: 6px 18px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--egk-accent);
+    letter-spacing: 0.12em;
+    margin-bottom: 28px;
+    animation: fadeDown 0.8s ease both;
+  }
+  .hero-badge::before {
+    content: '';
+    width: 8px; height: 8px;
+    background: var(--egk-accent);
+    border-radius: 50%;
+    animation: pulse-dot 1.6s infinite;
+  }
+
+  @keyframes pulse-dot {
+    0%,100% { box-shadow: 0 0 0 0 rgba(0,229,255,0.7); }
+    50% { box-shadow: 0 0 0 6px rgba(0,229,255,0); }
+  }
+
+  .hero-logo-wrap {
+    position: relative;
+    width: 130px; height: 130px;
+    margin: 0 auto 30px;
+    animation: fadeDown 0.9s 0.1s ease both;
+  }
+  .hero-logo-ring {
+    position: absolute; inset: -15px;
+    border-radius: 50%;
+    border: 2px solid rgba(26,108,255,0.4);
+    animation: spin 8s linear infinite;
+  }
+  .hero-logo-ring::after {
+    content: '';
+    position: absolute; top: -3px; left: 50%;
+    width: 8px; height: 8px;
+    margin-left: -4px;
+    background: var(--egk-accent);
+    border-radius: 50%;
+    box-shadow: 0 0 10px var(--egk-accent);
+  }
+  .hero-logo-img {
+    width: 100%; height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 0 20px rgba(26,108,255,0.9));
+    animation: logo-float 4s ease-in-out infinite;
+  }
+  @keyframes logo-float {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .hero-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(2.2rem, 6vw, 4.8rem);
+    font-weight: 900;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: #fff;
+    animation: fadeUp 1s 0.2s ease both;
+    text-shadow: 0 0 40px rgba(26,108,255,0.4);
+  }
+  .hero-title .blue { color: var(--egk-bright); }
+  .hero-title .cyan { color: var(--egk-accent); }
+
+  .hero-tagline {
+    font-size: 1.15rem;
+    font-weight: 300;
+    color: var(--text-dim);
+    margin: 16px auto 12px;
+    max-width: 560px;
+    line-height: 1.7;
+    animation: fadeUp 1s 0.35s ease both;
+  }
+  .hero-tagline em { color: var(--egk-bright); font-style: normal; font-weight: 600; }
+
+  .hero-best {
+    display: inline-block;
+    background: linear-gradient(135deg, rgba(255,213,79,0.15), rgba(255,213,79,0.05));
+    border: 1px solid rgba(255,213,79,0.4);
+    color: var(--gold);
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 6px 18px;
+    border-radius: 4px;
+    margin-bottom: 36px;
+    animation: fadeUp 1s 0.4s ease both;
+  }
+
+  .hero-btns {
+    display: flex; gap: 16px; flex-wrap: wrap; justify-content: center;
+    animation: fadeUp 1s 0.55s ease both;
+    margin-bottom: 60px;
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, #1a6cff, #003ecc);
+    color: #fff;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 15px 34px;
+    border-radius: 6px;
+    border: 1px solid rgba(77,166,255,0.4);
+    box-shadow: 0 0 20px rgba(26,108,255,0.55), inset 0 1px 0 rgba(255,255,255,0.1);
+    cursor: pointer;
+    transition: all 0.3s;
+    text-decoration: none;
+  }
+  .btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(26,108,255,0.75), inset 0 1px 0 rgba(255,255,255,0.15);
+  }
+  .btn-secondary {
+    background: transparent;
+    color: var(--egk-bright);
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 15px 34px;
+    border-radius: 6px;
+    border: 1px solid var(--egk-border);
+    cursor: pointer;
+    transition: all 0.3s;
+    text-decoration: none;
+  }
+  .btn-secondary:hover {
+    background: rgba(26,108,255,0.1);
+    border-color: var(--egk-bright);
+    transform: translateY(-3px);
+  }
+
+  .hero-stats {
+    display: flex; gap: 48px; flex-wrap: wrap; justify-content: center;
+    animation: fadeUp 1s 0.65s ease both;
+  }
+  .stat { text-align: center; }
+  .stat-num {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2rem;
+    font-weight: 900;
+    color: var(--egk-bright);
+    text-shadow: 0 0 20px rgba(26,108,255,0.6);
+    line-height: 1;
+  }
+  .stat-label {
+    font-size: 0.72rem;
+    color: var(--text-dim);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+
+  /* ─── SECTIONS ─── */
+  section {
+    position: relative; z-index: 1;
+    padding: 100px 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--egk-accent);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .section-label::before { content: '// '; }
+
+  .section-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(1.6rem, 4vw, 2.8rem);
+    font-weight: 900;
+    color: #fff;
+    line-height: 1.2;
+    margin-bottom: 14px;
+    text-shadow: 0 0 20px rgba(26,108,255,0.25);
+  }
+  .section-sub {
+    font-size: 1rem;
+    color: var(--text-dim);
+    max-width: 600px;
+    line-height: 1.8;
+    margin-bottom: 56px;
+  }
+
+  /* ─── FEATURES GRID ─── */
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+  }
+
+  .feature-card {
+    background: var(--egk-card);
+    border: 1px solid var(--egk-border);
+    border-radius: 12px;
+    padding: 30px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s;
+    cursor: default;
+  }
+  .feature-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--egk-blue), transparent);
+    opacity: 0;
+    transition: opacity 0.4s;
+  }
+  .feature-card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(26,108,255,0.6);
+    box-shadow: 0 12px 40px rgba(26,108,255,0.2);
+  }
+  .feature-card:hover::before { opacity: 1; }
+
+  .feature-icon {
+    width: 56px; height: 56px;
+    background: rgba(26,108,255,0.12);
+    border: 1px solid rgba(26,108,255,0.3);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.6rem;
+    margin-bottom: 20px;
+    transition: all 0.4s;
+  }
+  .feature-card:hover .feature-icon {
+    background: rgba(26,108,255,0.22);
+    box-shadow: 0 0 20px rgba(26,108,255,0.35);
+  }
+
+  .feature-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 0.04em;
+    margin-bottom: 10px;
+  }
+  .feature-desc {
+    font-size: 0.88rem;
+    color: var(--text-dim);
+    line-height: 1.7;
+  }
+  .feature-tag {
+    display: inline-block;
+    margin-top: 14px;
+    padding: 4px 10px;
+    border-radius: 3px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+  }
+  .tag-primary { background: rgba(26,108,255,0.15); color: var(--egk-bright); border: 1px solid rgba(26,108,255,0.3); }
+  .tag-secondary { background: rgba(0,229,255,0.1); color: var(--egk-accent); border: 1px solid rgba(0,229,255,0.3); }
+  .tag-gold { background: rgba(255,213,79,0.1); color: var(--gold); border: 1px solid rgba(255,213,79,0.3); }
+
+  /* ─── LEVELS ─── */
+  .levels-wrap {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 32px;
+  }
+  @media(max-width:700px){ .levels-wrap { grid-template-columns: 1fr; } }
+
+  .level-card {
+    background: var(--egk-card);
+    border: 1px solid var(--egk-border);
+    border-radius: 16px;
+    padding: 36px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s;
+  }
+  .level-card:hover {
+    border-color: rgba(26,108,255,0.6);
+    box-shadow: 0 16px 50px rgba(26,108,255,0.18);
+    transform: translateY(-4px);
+  }
+  .level-card::after {
+    content: '';
+    position: absolute; bottom: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--egk-blue), var(--egk-accent));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.5s;
+  }
+  .level-card:hover::after { transform: scaleX(1); }
+
+  .level-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+  }
+  .level-primary { background: rgba(26,108,255,0.15); color: var(--egk-bright); border: 1px solid rgba(26,108,255,0.35); }
+  .level-secondary { background: rgba(0,229,255,0.1); color: var(--egk-accent); border: 1px solid rgba(0,229,255,0.3); }
+
+  .level-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.25rem;
+    font-weight: 900;
+    color: #fff;
+    margin-bottom: 8px;
+  }
+  .level-grade {
+    font-size: 0.82rem;
+    color: var(--text-dim);
+    margin-bottom: 20px;
+  }
+  .level-items { list-style: none; }
+  .level-items li {
+    display: flex; align-items: flex-start; gap: 10px;
+    font-size: 0.88rem;
+    color: var(--text);
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(26,108,255,0.1);
+    line-height: 1.5;
+  }
+  .level-items li:last-child { border-bottom: none; }
+  .level-items li::before {
+    content: '▶';
+    color: var(--egk-blue);
+    font-size: 0.6rem;
+    margin-top: 3px;
+    flex-shrink: 0;
+  }
+
+  /* ─── CHALLENGES ─── */
+  .challenges-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+  }
+
+  .challenge-card {
+    background: var(--egk-card);
+    border: 1px solid var(--egk-border);
+    border-radius: 12px;
+    padding: 24px;
+    text-align: center;
+    transition: all 0.4s;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .challenge-card:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 12px 40px rgba(26,108,255,0.25);
+    border-color: rgba(26,108,255,0.55);
+  }
+  .challenge-card .diff {
+    position: absolute; top: 12px; right: 12px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.6rem;
+    padding: 3px 8px; border-radius: 3px;
+    letter-spacing: 0.1em;
+  }
+  .diff-easy { background: rgba(0,200,100,0.15); color: #00c864; border: 1px solid rgba(0,200,100,0.3); }
+  .diff-medium { background: rgba(255,165,0,0.15); color: #ffaa00; border: 1px solid rgba(255,165,0,0.3); }
+  .diff-hard { background: rgba(255,50,80,0.15); color: #ff3250; border: 1px solid rgba(255,50,80,0.3); }
+
+  .challenge-emoji { font-size: 2.6rem; margin-bottom: 12px; display: block; }
+  .challenge-name {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 8px;
+    letter-spacing: 0.04em;
+  }
+  .challenge-desc { font-size: 0.8rem; color: var(--text-dim); line-height: 1.6; }
+  .challenge-pts {
+    display: inline-flex; align-items: center; gap: 5px;
+    margin-top: 12px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--gold);
+  }
+
+  /* ─── INTERACTIVE CODE DEMO ─── */
+  .code-demo {
+    background: #0a0f1c;
+    border: 1px solid var(--egk-border);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  }
+  .code-demo-header {
+    background: rgba(26,108,255,0.1);
+    border-bottom: 1px solid var(--egk-border);
+    padding: 12px 20px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .code-dots { display: flex; gap: 7px; }
+  .code-dot { width: 11px; height: 11px; border-radius: 50%; }
+  .dot-r { background: #ff5f57; }
+  .dot-y { background: #febc2e; }
+  .dot-g { background: #28c840; }
+  .code-filename {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--text-dim);
+    letter-spacing: 0.08em;
+  }
+  .code-run {
+    margin-left: auto;
+    background: linear-gradient(135deg, #1a6cff, #003ecc);
+    color: #fff;
+    border: none;
+    padding: 6px 18px;
+    border-radius: 5px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 0 10px rgba(26,108,255,0.4);
+  }
+  .code-run:hover { box-shadow: 0 0 20px rgba(26,108,255,0.7); transform: scale(1.04); }
+
+  .code-body {
+    display: grid; grid-template-columns: 1fr 1fr;
+    min-height: 300px;
+  }
+  @media(max-width:700px){ .code-body { grid-template-columns: 1fr; } }
+
+  .code-editor {
+    padding: 24px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.82rem;
+    line-height: 1.8;
+    border-right: 1px solid var(--egk-border);
+    white-space: pre;
+    overflow-x: auto;
+    position: relative;
+  }
+  .code-editor .kw { color: #569cd6; }
+  .code-editor .fn { color: #dcdcaa; }
+  .code-editor .str { color: #ce9178; }
+  .code-editor .cmt { color: #6a9955; }
+  .code-editor .num { color: #b5cea8; }
+  .code-editor .op { color: #d4d4d4; }
+  .code-editor .var { color: #9cdcfe; }
+  .code-editor .lit { color: #4ec9b0; }
+
+  .code-output {
+    padding: 24px;
+    background: rgba(0,0,0,0.25);
+  }
+  .output-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .output-label::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: #28c840;
+    border-radius: 50%;
+    animation: pulse-dot 1.2s infinite;
+  }
+  .output-text {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.8rem;
+    color: #a8d8a8;
+    line-height: 1.9;
+    min-height: 200px;
+  }
+  .output-cursor {
+    display: inline-block;
+    width: 8px; height: 16px;
+    background: var(--egk-accent);
+    animation: blink 1s step-end infinite;
+    vertical-align: text-bottom;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  /* ─── CURRICULUM TABS ─── */
+  .tabs {
+    display: flex; gap: 0;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid var(--egk-border);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+  }
+  .tab-btn {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--text-dim);
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 14px 20px;
+    cursor: pointer;
+    transition: all 0.3s;
+    border-right: 1px solid var(--egk-border);
+    min-width: 100px;
+  }
+  .tab-btn:last-child { border-right: none; }
+  .tab-btn.active {
+    background: rgba(26,108,255,0.18);
+    color: var(--egk-bright);
+    box-shadow: inset 0 -2px 0 var(--egk-blue);
+  }
+  .tab-btn:hover:not(.active) { background: rgba(26,108,255,0.08); color: var(--text); }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  .curriculum-list {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+  }
+  .curr-item {
+    background: var(--egk-card);
+    border: 1px solid var(--egk-border);
+    border-radius: 10px;
+    padding: 20px;
+    transition: all 0.3s;
+  }
+  .curr-item:hover { border-color: rgba(26,108,255,0.5); transform: translateY(-2px); }
+  .curr-week {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.62rem;
+    color: var(--egk-accent);
+    letter-spacing: 0.1em;
+    margin-bottom: 8px;
+  }
+  .curr-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 6px;
+  }
+  .curr-desc { font-size: 0.78rem; color: var(--text-dim); line-height: 1.6; }
+
+  /* ─── LEADERBOARD ─── */
+  .leaderboard {
+    background: var(--egk-card);
+    border: 1px solid var(--egk-border);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  .lb-header {
+    background: rgba(26,108,255,0.1);
+    border-bottom: 1px solid var(--egk-border);
+    padding: 18px 28px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .lb-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--egk-bright);
+    letter-spacing: 0.08em;
+  }
+  .lb-live {
+    margin-left: auto;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.62rem;
+    color: #28c840;
+    letter-spacing: 0.1em;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .lb-live::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: #28c840;
+    border-radius: 50%;
+    animation: pulse-dot 1s infinite;
+  }
+
+  .lb-row {
+    display: flex; align-items: center; gap: 16px;
+    padding: 16px 28px;
+    border-bottom: 1px solid rgba(26,108,255,0.08);
+    transition: background 0.3s;
+  }
+  .lb-row:hover { background: rgba(26,108,255,0.05); }
+  .lb-row:last-child { border-bottom: none; }
+
+  .lb-rank {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1rem;
+    font-weight: 900;
+    width: 32px; text-align: center;
+  }
+  .rank-1 { color: #ffd700; text-shadow: 0 0 10px rgba(255,215,0,0.6); }
+  .rank-2 { color: #c0c0c0; }
+  .rank-3 { color: #cd7f32; }
+  .rank-rest { color: var(--text-dim); font-size: 0.8rem; }
+
+  .lb-avatar {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--egk-blue), var(--egk-accent));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #fff;
+    flex-shrink: 0;
+  }
+
+  .lb-info { flex: 1; }
+  .lb-name { font-weight: 600; font-size: 0.92rem; color: #fff; }
+  .lb-school { font-size: 0.72rem; color: var(--text-dim); }
+
+  .lb-pts {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--gold);
+  }
+
+  .lb-bar-wrap { width: 80px; }
+  .lb-bar {
+    height: 4px;
+    background: rgba(26,108,255,0.2);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .lb-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--egk-blue), var(--egk-accent));
+    border-radius: 2px;
+    transition: width 1.5s ease;
+  }
+
+  /* ─── WHY SECTION ─── */
+  .why-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+  }
+  .why-item {
+    text-align: center;
+    padding: 28px 20px;
+    background: var(--egk-card);
+    border: 1px solid var(--egk-border);
+    border-radius: 12px;
+    transition: all 0.4s;
+  }
+  .why-item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 30px rgba(26,108,255,0.15);
+    border-color: rgba(26,108,255,0.5);
+  }
+  .why-icon { font-size: 2.4rem; margin-bottom: 14px; display: block; }
+  .why-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 8px;
+    letter-spacing: 0.04em;
+  }
+  .why-desc { font-size: 0.82rem; color: var(--text-dim); line-height: 1.7; }
+
+  /* ─── FOOTER ─── */
+  footer {
+    position: relative; z-index: 1;
+    background: rgba(4,13,26,0.95);
+    border-top: 1px solid var(--egk-border);
+    padding: 60px 40px 36px;
+  }
+  .footer-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .footer-grid {
+    display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 48px; margin-bottom: 48px;
+  }
+  @media(max-width:900px){ .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; } }
+  @media(max-width:500px){ .footer-grid { grid-template-columns: 1fr; } }
+
+  .footer-brand img { height: 50px; margin-bottom: 16px; filter: drop-shadow(0 0 8px #1a6cff); }
+  .footer-brand p { font-size: 0.82rem; color: var(--text-dim); line-height: 1.8; max-width: 280px; }
+  .footer-brand p strong { color: var(--egk-bright); }
+
+  .footer-col-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    color: var(--egk-bright);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .footer-links { list-style: none; }
+  .footer-links li { margin-bottom: 10px; }
+  .footer-links a {
+    font-size: 0.82rem;
+    color: var(--text-dim);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  .footer-links a:hover { color: var(--egk-accent); }
+
+  .footer-contact p { font-size: 0.82rem; color: var(--text-dim); line-height: 1.9; }
+  .footer-contact a { color: var(--egk-bright); text-decoration: none; }
+  .footer-contact a:hover { color: var(--egk-accent); }
+
+  .footer-bottom {
+    border-top: 1px solid var(--egk-border);
+    padding-top: 24px;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 12px;
+  }
+  .footer-copy { font-size: 0.72rem; color: var(--text-dim); }
+  .footer-copy span { color: var(--egk-bright); }
+  .footer-dev { font-size: 0.72rem; color: var(--text-dim); text-align: right; }
+  .footer-dev strong { color: var(--egk-accent); }
+
+  /* ─── ANIMATIONS ─── */
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(28px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .fade-in {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+  /* ─── SCROLL INDICATOR ─── */
+  .scroll-hint {
+    position: absolute; bottom: 36px; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--text-dim);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    animation: fadeUp 1s 1s ease both;
+  }
+  .scroll-arrow {
+    width: 20px; height: 30px;
+    border: 1px solid rgba(26,108,255,0.4);
+    border-radius: 10px;
+    position: relative;
+  }
+  .scroll-arrow::after {
+    content: '';
+    position: absolute; top: 5px; left: 50%; transform: translateX(-50%);
+    width: 4px; height: 8px;
+    background: var(--egk-blue);
+    border-radius: 2px;
+    animation: scroll-anim 1.5s ease infinite;
+  }
+  @keyframes scroll-anim {
+    0% { top: 5px; opacity: 1; }
+    80% { top: 14px; opacity: 0; }
+    100% { top: 5px; opacity: 0; }
+  }
+
+  /* ─── MODAL ─── */
+  .modal-overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(4,13,26,0.85);
+    backdrop-filter: blur(8px);
+    z-index: 1000;
+    align-items: center; justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--egk-card);
+    border: 1px solid rgba(26,108,255,0.4);
+    border-radius: 20px;
+    padding: 40px;
+    max-width: 480px;
+    width: 90%;
+    position: relative;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.7);
+    animation: fadeUp 0.4s ease;
+  }
+  .modal h3 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 900;
+    color: #fff;
+    margin-bottom: 8px;
+  }
+  .modal p { font-size: 0.88rem; color: var(--text-dim); line-height: 1.7; margin-bottom: 20px; }
+  .modal input, .modal select {
+    width: 100%;
+    background: rgba(26,108,255,0.07);
+    border: 1px solid var(--egk-border);
+    border-radius: 8px;
+    padding: 12px 16px;
+    color: #fff;
+    font-family: 'Exo 2', sans-serif;
+    font-size: 0.88rem;
+    margin-bottom: 14px;
+    outline: none;
+    transition: border-color 0.3s;
+  }
+  .modal input:focus, .modal select:focus { border-color: var(--egk-blue); }
+  .modal select option { background: #0a0f1c; }
+  .modal-close {
+    position: absolute; top: 16px; right: 16px;
+    background: none; border: none;
+    color: var(--text-dim); font-size: 1.2rem;
+    cursor: pointer; transition: color 0.3s;
+    line-height: 1;
+  }
+  .modal-close:hover { color: #fff; }
+
+  /* ─── PROGRESS BAR TOP ─── */
+  #progress-bar {
+    position: fixed; top: 0; left: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--egk-blue), var(--egk-accent));
+    z-index: 200;
+    width: 0%;
+    transition: width 0.1s;
+    box-shadow: 0 0 8px var(--egk-accent);
+  }
+
+  /* responsive nav */
+  @media(max-width:768px){
+    nav { padding: 12px 20px; }
+    .nav-links { display: none; }
+    section { padding: 70px 20px; }
+    .footer-brand p { max-width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<div id="progress-bar"></div>
+<canvas id="bg-canvas"></canvas>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">
+    <img src="https://egkhor.com.my/home/wp-content/uploads/2026/02/cropped-IMG_7598.png" alt="EGK Logo">
+    <div class="nav-brand">
+      <span>EGK</span> CodeQuest<br>Malaysia
+    </div>
+  </div>
+  <div class="nav-links">
+    <a href="#features">Features</a>
+    <a href="#levels">Levels</a>
+    <a href="#challenges">Challenges</a>
+    <a href="#curriculum">Curriculum</a>
+    <a href="#leaderboard">Leaderboard</a>
+    <a href="https://drive.google.com/drive/folders/1PM4pMIM194AYEhGRHV-1sN944qY93YDE?usp=sharing" class="nav-cta" target="_blank">
+      Download App
+    </a>  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-badge">💡 Best for Digital Skills &nbsp;|&nbsp; Malaysia's #1 Coding Platform</div>
+
+  <div class="hero-logo-wrap">
+    <div class="hero-logo-ring"></div>
+    <img class="hero-logo-img" src="https://egkhor.com.my/home/wp-content/uploads/2026/02/cropped-IMG_7598.png" alt="EGK Logo">
+  </div>
+
+  <h1 class="hero-title">
+    <span class="blue">EGK</span> CodeQuest<br><span class="cyan">Malaysia</span>
+  </h1>
+  <p class="hero-tagline">
+    <em>Coding & Computational Thinking</em> for every Malaysian student.<br>
+    From drag-and-drop blocks to Python & JavaScript — real skills, real projects.
+  </p>
+  <div class="hero-best">💡 Best for Digital Skills — Malaysia Madani Ready</div>
+
+  <div class="hero-btns">
+      <a href="https://drive.google.com/drive/folders/1PM4pMIM194AYEhGRHV-1sN944qY93YDE?usp=sharing" class="btn-primary" target="_blank">
+        ⬇ Download App
+      </a>
+
+      <a href="https://buy.stripe.com/dRm00i7fz5933Izbbf6Zy0m" class="btn-secondary" target="_blank">
+        🔑 Buy CD Key
+      </a>
+    <a href="#features" class="btn-secondary">Explore Platform</a>
+  </div>
+
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-num" data-target="2400">0</div><div class="stat-label">Students Enrolled</div></div>
+    <div class="stat"><div class="stat-num" data-target="120">0</div><div class="stat-label">Coding Challenges</div></div>
+    <div class="stat"><div class="stat-num" data-target="18">0</div><div class="stat-label">Project Templates</div></div>
+    <div class="stat"><div class="stat-num" data-target="98">0</div><div class="stat-label">% Satisfaction</div></div>
+  </div>
+
+  <div class="scroll-hint">
+    <div class="scroll-arrow"></div>
+    scroll to explore
+  </div>
+</section>
+
+<!-- ── DIVIDER ── -->
+<div style="height:1px;background:linear-gradient(90deg,transparent,rgba(26,108,255,0.3),transparent);position:relative;z-index:1;"></div>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="fade-in">
+    <div class="section-label">Platform Features</div>
+    <h2 class="section-title">Everything You Need to<br>Learn to Code</h2>
+    <p class="section-sub">A complete coding education platform built for Malaysian schools — interactive, bilingual, and aligned with KSSM Digital Technology standards.</p>
+  </div>
+
+  <div class="features-grid">
+    <div class="feature-card fade-in">
+      <div class="feature-icon">🧩</div>
+      <div class="feature-title">Drag & Drop Coding</div>
+      <div class="feature-desc">Visual block-based programming for primary students. Build logic, loops and conditions by snapping colorful blocks — no syntax errors to worry about.</div>
+      <span class="feature-tag tag-primary">Scratch-Based</span>
+    </div>
+    <div class="feature-card fade-in">
+      <div class="feature-icon">🐍</div>
+      <div class="feature-title">Python & JavaScript</div>
+      <div class="feature-desc">Text-based coding for secondary students. Real industry languages with guided challenges, auto-grading, and instant feedback in the browser.</div>
+      <span class="feature-tag tag-secondary">Secondary Level</span>
+    </div>
+    <div class="feature-card fade-in">
+      <div class="feature-icon">🎮</div>
+      <div class="feature-title">Game Development</div>
+      <div class="feature-desc">Build playable 2D games from scratch. Learn variables, events, and collision detection while creating something your friends can actually play.</div>
+      <span class="feature-tag tag-gold">Project-Based</span>
+    </div>
+    <div class="feature-card fade-in">
+      <div class="feature-icon">📱</div>
+      <div class="feature-title">App Prototyping</div>
+      <div class="feature-desc">Design and prototype mobile-style apps. From UI mockups to functional click-throughs — real product thinking meets coding skills.</div>
+      <span class="feature-tag tag-primary">Creative Tech</span>
+    </div>
+    <div class="feature-card fade-in">
+      <div class="feature-icon">🏆</div>
+      <div class="feature-title">Competitive Challenges</div>
+      <div class="feature-desc">Weekly algorithm puzzles, logic challenges, and timed coding contests. Earn badges, climb the leaderboard, and represent your school.</div>
+      <span class="feature-tag tag-secondary">Competitions</span>
+    </div>
+    <div class="feature-card fade-in">
+      <div class="feature-icon">🤖</div>
+      <div class="feature-title">AI & Robotics Intro</div>
+      <div class="feature-desc">Explore machine learning concepts, train simple classifiers, and simulate robot movements. Future-ready skills for Malaysia's digital economy.</div>
+      <span class="feature-tag tag-gold">AI-Ready</span>
+    </div>
+  </div>
+</section>
+
+<div style="height:1px;background:linear-gradient(90deg,transparent,rgba(26,108,255,0.3),transparent);position:relative;z-index:1;"></div>
+
+<!-- LEVELS -->
+<section id="levels">
+  <div class="fade-in">
+    <div class="section-label">Learning Tracks</div>
+    <h2 class="section-title">Two Tracks, One Mission:<br>Computational Excellence</h2>
+    <p class="section-sub">Carefully designed pathways matching the cognitive development of primary and secondary school students in Malaysia.</p>
+  </div>
+
+  <div class="levels-wrap fade-in">
+    <div class="level-card">
+      <div class="level-badge level-primary">🌱 Primary Track</div>
+      <div class="level-title">CodeSprout</div>
+      <div class="level-grade">Year 4 – Year 6 (Age 10–12)</div>
+      <ul class="level-items">
+        <li>Visual block coding with Scratch-style environment</li>
+        <li>Animations, stories & simple games</li>
+        <li>Sequences, loops, and conditionals</li>
+        <li>Debugging basics & logical thinking</li>
+        <li>Mini-projects: digital greeting cards, quizzes</li>
+        <li>Certificate of Computational Thinker</li>
+      </ul>
+    </div>
+    <div class="level-card">
+      <div class="level-badge level-secondary">⚡ Secondary Track</div>
+      <div class="level-title">CodeForce</div>
+      <div class="level-grade">Form 1 – Form 5 (Age 13–17)</div>
+      <ul class="level-items">
+        <li>Python fundamentals & data structures</li>
+        <li>JavaScript for web & interactive apps</li>
+        <li>Algorithms: sorting, searching, recursion</li>
+        <li>API integration & real-world data</li>
+        <li>Capstone projects: games, web apps, tools</li>
+        <li>EGK CodeQuest Pro Certification</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<div style="height:1px;background:linear-gradient(90deg,transparent,rgba(26,108,255,0.3),transparent);position:relative;z-index:1;"></div>
+
+<!-- CODE DEMO -->
+<section>
+  <div class="fade-in">
+    <div class="section-label">Live Code Editor</div>
+    <h2 class="section-title">Code. Run. See Results.<br>Instantly.</h2>
+    <p class="section-sub">Our in-browser IDE gives immediate feedback. No installations, no setup — just open and start coding.</p>
+  </div>
+
+  <div class="code-demo fade-in">
+    <div class="code-demo-header">
+      <div class="code-dots">
+        <div class="code-dot dot-r"></div>
+        <div class="code-dot dot-y"></div>
+        <div class="code-dot dot-g"></div>
+      </div>
+      <div class="code-filename">quest_solution.py &nbsp;—&nbsp; Fibonacci Challenge</div>
+      <button class="code-run" onclick="runCode()">▶ RUN</button>
+    </div>
+    <div class="code-body">
+      <div class="code-editor" id="code-display">
+<span class="cmt"># EGK CodeQuest Challenge #47</span>
+<span class="cmt"># Generate Fibonacci sequence</span>
+
+<span class="kw">def</span> <span class="fn">fibonacci</span>(<span class="var">n</span>):
+    <span class="var">sequence</span> <span class="op">=</span> [<span class="num">0</span>, <span class="num">1</span>]
+    <span class="kw">while</span> <span class="fn">len</span>(<span class="var">sequence</span>) <span class="op">&lt;</span> <span class="var">n</span>:
+        <span class="var">next_num</span> <span class="op">=</span> (
+            <span class="var">sequence</span>[<span class="op">-</span><span class="num">1</span>] <span class="op">+</span> <span class="var">sequence</span>[<span class="op">-</span><span class="num">2</span>]
+        )
+        <span class="var">sequence</span>.<span class="fn">append</span>(<span class="var">next_num</span>)
+    <span class="kw">return</span> <span class="var">sequence</span>
+
+<span class="var">result</span> <span class="op">=</span> <span class="fn">fibonacci</span>(<span class="num">10</span>)
+<span class="fn">print</span>(<span class="str">"Sequence:"</span>, <span class="var">result</span>)
+<span class="fn">print</span>(<span class="str">"Sum:"</span>, <span class="fn">sum</span>(<span class="var">result</span>))
+      </div>
+      <div class="code-output">
+        <div class="output-label">Output Console</div>
+        <div class="output-text" id="output-text">
+          Click ▶ RUN to execute...<br><span class="output-cursor"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div style="height:1px;background:linear-gradient(90deg,transparent,rgba(26,108,255,0.3),transparent);position:relative;z-index:1;"></div>
+
+<!-- CHALLENGES -->
+<section id="challenges">
+  <div class="fade-in">
+    <div class="section-label">Coding Challenges</div>
+    <h2 class="section-title">Real Problems.<br>Real Solutions.</h2>
+    <p class="section-sub">Challenges tied to authentic Malaysian contexts — from flood prediction to food delivery routing. Coding meets the real world.</p>
+  </div>
+
+  <div class="challenges-grid fade-in">
+    <div class="challenge-card">
+      <span class="diff diff-easy">EASY</span>
+      <span class="challenge-emoji">🌊</span>
+      <div class="challenge-name">Flood Alert System</div>
+      <div class="challenge-desc">Build a rainfall data processor that triggers alerts when thresholds are exceeded.</div>
+      <div class="challenge-pts">⭐ 150 pts</div>
+    </div>
+    <div class="challenge-card">
+      <span class="diff diff-medium">MEDIUM</span>
+      <span class="challenge-emoji">🍜</span>
+      <div class="challenge-name">Hawker Finder App</div>
+      <div class="challenge-desc">Create a location-based search that finds the nearest hawker stalls using coordinates.</div>
+      <div class="challenge-pts">⭐ 300 pts</div>
+    </div>
+    <div class="challenge-card">
+      <span class="diff diff-hard">HARD</span>
+      <span class="challenge-emoji">🚦</span>
+      <div class="challenge-name">Smart Traffic Flow</div>
+      <div class="challenge-desc">Implement a graph algorithm to find the shortest route through simulated KL traffic nodes.</div>
+      <div class="challenge-pts">⭐ 600 pts</div>
+    </div>
+    <div class="challenge-card">
+      <span class="diff diff-easy">EASY</span>
+      <span class="challenge-emoji">🎵</span>
+      <div class="challenge-name">Melody Generator</div>
+      <div class="challenge-desc">Use loops and arrays to create a simple melody sequencer that plays musical notes.</div>
+      <div class="challenge-pts">⭐ 120 pts</div>
+    </div>
+    <div class="challenge-card">
+      <span class="diff diff-medium">MEDIUM</span>
+      <span class="challenge-emoji">♻️</span>
+      <div class="challenge-name">Recycling Sorter</div>
+      <div class="challenge-desc">Classify waste items using a decision tree algorithm you build from scratch.</div>
+      <div class="challenge-pts">⭐ 280 pts</div>
+    </div>
+    <div class="challenge-card">
+      <span class="diff diff-hard">HARD</span>
+      <span class="challenge-emoji">🛸</span>
+      <div class="challenge-name">Space Debris Cleaner</div>
+      <div class="challenge-desc">Simulate a satellite path optimizer to clear debris using minimum fuel consumption.</div>
+      <div class="challenge-pts">⭐ 750 pts</div>
+    </div>
+  </div>
+</section>
+
+<div style="height:1px;background:linear-gradient(90deg,transparent,rgba(26,108,255,0.3),transparent);position:relative;z-index:1;"></div>
+
+<!-- CURRICULUM -->
+<section id="curriculum">
+  <div class="fade-in">
+    <div class="section-label">12-Week Curriculum</div>
+    <h2 class="section-title">Structured Learning,<br>Measurable Progress</h2>
+    <p class="section-sub">A carefully sequenced journey from fundamentals to real-world projects — with assessments at every stage.</p>
+  </div>
+
+  <div class="tabs fade-in">
+    <button class="tab-btn active" onclick="switchTab('primary')">Primary Track</button>
+    <button class="tab-btn" onclick="switchTab('secondary')">Secondary Track</button>
+    <button class="tab-btn" onclick="switchTab('advanced')">Advanced / Olympiad</button>
+  </div>
+
+  <div id="tab-primary" class="tab-content active fade-in">
+    <div class="curriculum-list">
+      <div class="curr-item"><div class="curr-week">WEEK 1–2</div><div class="curr-title">Hello, Code World!</div><div class="curr-desc">Introduction to computational thinking. Sequences, algorithms in everyday life.</div></div>
+      <div class="curr-item"><div class="curr-week">WEEK 3–4</div><div class="curr-title">Loops & Repetition</div><div class="curr-desc">Repeat blocks, counting loops, and pattern drawing with turtle-style graphics.</div></div>
+      <div class="curr-item"><div class="curr-week">WEEK 5–6</div><div class="curr-title">Make Decisions</div><div class="curr-desc">If/else logic, comparisons, and building a simple quiz game.</div></div>
+      <div class="curr-item"><div class="curr-week">WEEK 7–8</div><div class="curr-title">Variables & Data</div><div class="curr-desc">Store and change values. Build a score tracker for your game.</div></div>
+      <div class="curr-item"><div class="curr-week">WEEK 9–10</div><div class="curr-title">Events & Interaction</div><div class="curr-desc">Respond to keyboard/mouse events. Make things move and react.</div></div>
+      <div class="curr-item"><div class="curr-week">WEEK 11–12</div><div class="curr-title">Final Project</div><div class="curr-desc">Create and present your own interactive game or story. Earn your CodeSprout badge!</div></div>
+    </div>
+  </div>
+
+  <div id="tab-secondary" class="tab-content fade-in">
+    <div class="curriculum-list">
+      <div class="curr-item"><div class="curr-week">WEEK 1–2</div><div class="curr-title">Python Fundamentals</div><div class="curr-desc">Variables, data types, input/output. Write your first Python programs.</div></div>
+      <div class="curr-item"><div class="curr-week">WEEK 3–4</div><div class="curr-title">Control Flow</div><div class="curr-desc">Conditionals, loops, nested structures. Logic drills and mini-challenges.</div></div>
+      <div class="curr-item"><div class="curr-week">WEEK 5–6</div><div class="curr-title">Functions & Modules</div><div class="curr-desc">Write reusable code, import libraries, build a calculator app.</div></div>
+      <div class="curr-item"><div class="curr-week">WEEK 7–8</div><div class="curr-title">Data Structures</div><div class="curr-desc">Lists, dictionaries, tuples. Real data manipulation projects.</div></div>
+      <div class="curr-item"><div class="curr-week">WEEK 9–10</div><div class="curr-title">Web & JavaScript</div><div class="curr-desc">DOM manipulation, event listeners, build an interactive webpage.</div></div>
+      <div class="curr-item"><div class="curr-week">WEEK 11–12</div><div class="curr-title">Capstone Project</div><div class="curr-desc">Build, test and deploy a real app. Present to judges for EGK CodeForce certification.</div></div>
+    </div>
+  </div>
+
+  <div id="tab-advanced" class="tab-content fade-in">
+    <div class="curriculum-list">
+      <div class="curr-item"><div class="curr-week">WEEK 1–2</div><div class="curr-title">Algorithms Deep Dive</div><div class="curr-desc">Time complexity, Big-O notation, search & sort algorithm analysis.</div></div>
+      <div class="curr-item"><div class="curr-week">WEEK 3–4</div><div class="curr-title">Recursion & Backtracking</div><div class="curr-desc">Divide & conquer, recursive trees, classic puzzle solving.</div></div>
+      <div class="curr-item"><div class="curr-week">WEEK 5–6</div><div class="curr-title">Graph Theory</div><div class="curr-desc">BFS, DFS, shortest paths. Real-world graph problems from Malaysia.</div></div>
+      <div class="curr-item"><div class="curr-week">WEEK 7–8</div><div class="curr-title">Dynamic Programming</div><div class="curr-desc">Memoization, tabulation, and classic DP problems for olympiad prep.</div></div>
+      <div class="curr-item"><div class="curr-week">WEEK 9–10</div><div class="curr-title">AI & ML Intro</div><div class="curr-desc">Train a simple classifier, explore neural net concepts, TensorFlow Lite demo.</div></div>
+      <div class="curr-item"><div class="curr-week">WEEK 11–12</div><div class="curr-title">Mock Olympiad</div><div class="curr-desc">Simulated IOI/BOI-style contest. Full results analysis and coaching session.</div></div>
+    </div>
+  </div>
+</section>
+
+<div style="height:1px;background:linear-gradient(90deg,transparent,rgba(26,108,255,0.3),transparent);position:relative;z-index:1;"></div>
+
+<!-- LEADERBOARD -->
+<section id="leaderboard">
+  <div class="fade-in">
+    <div class="section-label">Hall of Fame</div>
+    <h2 class="section-title">Malaysia's Top<br>Young Coders</h2>
+    <p class="section-sub">Updated weekly. Earn points through challenges, projects, and competition performance. Can you reach the top?</p>
+  </div>
+
+  <div class="leaderboard fade-in">
+    <div class="lb-header">
+      <div class="lb-title">🏆 EGK CodeQuest Leaderboard — April 2026</div>
+      <div class="lb-live">LIVE</div>
+    </div>
+    <div class="lb-row">
+      <div class="lb-rank rank-1">🥇</div>
+      <div class="lb-avatar">A</div>
+      <div class="lb-info"><div class="lb-name">Aiman Zulkifli</div><div class="lb-school">SMK Convent, Butterworth</div></div>
+      <div class="lb-bar-wrap"><div class="lb-bar"><div class="lb-bar-fill" style="width:100%"></div></div></div>
+      <div class="lb-pts">9,840 pts</div>
+    </div>
+    <div class="lb-row">
+      <div class="lb-rank rank-2">🥈</div>
+      <div class="lb-avatar" style="background:linear-gradient(135deg,#00aaff,#0044cc)">S</div>
+      <div class="lb-info"><div class="lb-name">Siti Rahmah Idris</div><div class="lb-school">SMK Penang Free, Georgetown</div></div>
+      <div class="lb-bar-wrap"><div class="lb-bar"><div class="lb-bar-fill" style="width:90%"></div></div></div>
+      <div class="lb-pts">8,920 pts</div>
+    </div>
+    <div class="lb-row">
+      <div class="lb-rank rank-3">🥉</div>
+      <div class="lb-avatar" style="background:linear-gradient(135deg,#ff6b35,#cc3300)">K</div>
+      <div class="lb-info"><div class="lb-name">Karthigeyan Raja</div><div class="lb-school">SMJK Jit Sin, Bukit Mertajam</div></div>
+      <div class="lb-bar-wrap"><div class="lb-bar"><div class="lb-bar-fill" style="width:85%"></div></div></div>
+      <div class="lb-pts">8,340 pts</div>
+    </div>
+    <div class="lb-row">
+      <div class="lb-rank rank-rest">4</div>
+      <div class="lb-avatar" style="background:linear-gradient(135deg,#9b59b6,#6c3483)">N</div>
+      <div class="lb-info"><div class="lb-name">Nurul Ain Hassan</div><div class="lb-school">SMK Dato Onn, Segamat</div></div>
+      <div class="lb-bar-wrap"><div class="lb-bar"><div class="lb-bar-fill" style="width:76%"></div></div></div>
+      <div class="lb-pts">7,480 pts</div>
+    </div>
+    <div class="lb-row">
+      <div class="lb-rank rank-rest">5</div>
+      <div class="lb-avatar" style="background:linear-gradient(135deg,#1abc9c,#0e7c61)">W</div>
+      <div class="lb-info"><div class="lb-name">Wei Jian Loh</div><div class="lb-school">SMK Seri Ampang, KL</div></div>
+      <div class="lb-bar-wrap"><div class="lb-bar"><div class="lb-bar-fill" style="width:70%"></div></div></div>
+      <div class="lb-pts">6,890 pts</div>
+    </div>
+  </div>
+</section>
+
+<div style="height:1px;background:linear-gradient(90deg,transparent,rgba(26,108,255,0.3),transparent);position:relative;z-index:1;"></div>
+
+<!-- WHY -->
+<section>
+  <div class="fade-in">
+    <div class="section-label">Why EGK CodeQuest</div>
+    <h2 class="section-title">Logic That Transfers<br>Across All STEM Subjects</h2>
+    <p class="section-sub">Coding isn't just coding — it's structured thinking, problem decomposition, and systematic debugging. Skills that help in Maths, Science, and beyond.</p>
+  </div>
+
+  <div class="why-grid fade-in">
+    <div class="why-item">
+      <span class="why-icon">🧠</span>
+      <div class="why-title">Builds Logic</div>
+      <div class="why-desc">Algorithmic thinking strengthens mathematical reasoning and systematic problem solving in all subjects.</div>
+    </div>
+    <div class="why-item">
+      <span class="why-icon">🇲🇾</span>
+      <div class="why-title">Malaysia-Focused</div>
+      <div class="why-desc">Content aligned with KSSM, local context challenges, and Malaysia's digital economy objectives.</div>
+    </div>
+    <div class="why-item">
+      <span class="why-icon">🎯</span>
+      <div class="why-title">Real Projects</div>
+      <div class="why-desc">Students build actual apps, games, and tools — not just follow tutorials. Portfolio-worthy outcomes.</div>
+    </div>
+    <div class="why-item">
+      <span class="why-icon">📊</span>
+      <div class="why-title">Teacher Dashboard</div>
+      <div class="why-desc">Full visibility into student progress, submission history, and class analytics for educators.</div>
+    </div>
+    <div class="why-item">
+      <span class="why-icon">🌐</span>
+      <div class="why-title">Bilingual Support</div>
+      <div class="why-desc">Platform available in Bahasa Malaysia and English. Content scaffolded for ESL learners.</div>
+    </div>
+    <div class="why-item">
+      <span class="why-icon">🏅</span>
+      <div class="why-title">Certification</div>
+      <div class="why-desc">EGK-issued certificates recognized by participating schools. Add to portfolio and university applications.</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <img src="https://egkhor.com.my/home/wp-content/uploads/2026/02/cropped-IMG_7598.png" alt="EGK Logo">
+        <p>
+          <strong>EGK Microelectronic Solutions Group Sdn. Bhd.</strong><br>
+          Malaysia's leading platform for digital skills education. Empowering the next generation of Malaysian coders, engineers, and innovators.
+        </p>
+      </div>
+
+      <div>
+        <div class="footer-col-title">Platform</div>
+        <ul class="footer-links">
+          <li><a href="#">Primary Track</a></li>
+          <li><a href="#">Secondary Track</a></li>
+          <li><a href="#">Advanced / Olympiad</a></li>
+          <li><a href="#">Code Editor</a></li>
+          <li><a href="#">Challenges</a></li>
+          <li><a href="#">Leaderboard</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <div class="footer-col-title">Schools</div>
+        <ul class="footer-links">
+          <li><a href="#">School Registration</a></li>
+          <li><a href="#">Teacher Dashboard</a></li>
+          <li><a href="#">Bulk Enrollment</a></li>
+          <li><a href="#">Curriculum Guide</a></li>
+          <li><a href="#">Certificates</a></li>
+          <li><a href="#">MOE Alignment</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-contact">
+        <div class="footer-col-title">Contact</div>
+        <p>
+          PO Box 4<br>
+          PO Bukit Mertajam<br>
+          14000 Bukit Mertajam<br>
+          Penang, Malaysia<br><br>
+          <a href="mailto:sales@egkhor.com.my">sales@egkhor.com.my</a>
+        </p>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="footer-copy">© 2026 <span>EGK Microelectronic Solutions Group Sdn. Bhd.</span> All rights reserved.</div>
+      <div class="footer-dev">Developed solely by: <strong>Isaac Khor Eng Gian</strong></div>
+    </div>
+  </div>
+</footer>
+
+<div class="modal-overlay" id="licenseModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeLicense()">✕</button>
+    <h3>🔑 Activate Your License</h3>
+    <p>Enter your CD Key after purchase to unlock full features.</p>
+
+    <input type="text" placeholder="Enter CD Key">
+
+    <button class="btn-primary" style="width:100%;margin-top:10px;">
+      Activate
+    </button>
+
+    <p style="margin-top:12px;font-size:0.75rem;">
+      Don’t have a key?
+      <a href="https://buy.stripe.com/test_xxx" target="_blank">Buy here</a>
+    </p>
+  </div>
+</div>
+
+<script>
+// ─── PARTICLE BG ───
+const canvas = document.getElementById('bg-canvas');
+const ctx = canvas.getContext('2d');
+let W, H, particles = [];
+
+function resize() {
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+window.addEventListener('resize', resize);
+resize();
+
+class Particle {
+  constructor() { this.reset(); }
+  reset() {
+    this.x = Math.random() * W;
+    this.y = Math.random() * H;
+    this.vx = (Math.random() - 0.5) * 0.4;
+    this.vy = (Math.random() - 0.5) * 0.4;
+    this.r = Math.random() * 1.5 + 0.3;
+    this.alpha = Math.random() * 0.5 + 0.1;
+    this.color = Math.random() > 0.5 ? '#1a6cff' : '#00aaff';
+  }
+  update() {
+    this.x += this.vx; this.y += this.vy;
+    if (this.x < 0 || this.x > W || this.y < 0 || this.y > H) this.reset();
+  }
+  draw() {
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+    ctx.fillStyle = this.color;
+    ctx.globalAlpha = this.alpha;
+    ctx.fill();
+    ctx.globalAlpha = 1;
+  }
+}
+
+for (let i = 0; i < 120; i++) particles.push(new Particle());
+
+function connectParticles() {
+  for (let i = 0; i < particles.length; i++) {
+    for (let j = i + 1; j < particles.length; j++) {
+      const dx = particles[i].x - particles[j].x;
+      const dy = particles[i].y - particles[j].y;
+      const d = Math.sqrt(dx*dx + dy*dy);
+      if (d < 120) {
+        ctx.beginPath();
+        ctx.moveTo(particles[i].x, particles[i].y);
+        ctx.lineTo(particles[j].x, particles[j].y);
+        ctx.strokeStyle = '#1a6cff';
+        ctx.globalAlpha = 0.06 * (1 - d/120);
+        ctx.lineWidth = 0.6;
+        ctx.stroke();
+        ctx.globalAlpha = 1;
+      }
+    }
+  }
+}
+
+function animateBG() {
+  ctx.clearRect(0, 0, W, H);
+  particles.forEach(p => { p.update(); p.draw(); });
+  connectParticles();
+  requestAnimationFrame(animateBG);
+}
+animateBG();
+
+// ─── PROGRESS BAR ───
+const bar = document.getElementById('progress-bar');
+window.addEventListener('scroll', () => {
+  const scrolled = window.scrollY;
+  const maxScroll = document.body.scrollHeight - window.innerHeight;
+  bar.style.width = (scrolled / maxScroll * 100) + '%';
+});
+
+// ─── COUNTER ANIMATION ───
+function animateCounter(el, target) {
+  let current = 0;
+  const increment = target / 60;
+  const timer = setInterval(() => {
+    current += increment;
+    if (current >= target) { current = target; clearInterval(timer); }
+    el.textContent = Math.floor(current).toLocaleString();
+  }, 25);
+}
+
+const counters = document.querySelectorAll('[data-target]');
+const counterObserver = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const el = entry.target;
+      animateCounter(el, parseInt(el.dataset.target));
+      counterObserver.unobserve(el);
+    }
+  });
+}, { threshold: 0.5 });
+counters.forEach(c => counterObserver.observe(c));
+
+// ─── FADE IN ───
+const fadeEls = document.querySelectorAll('.fade-in');
+const fadeObserver = new IntersectionObserver(entries => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), i * 80);
+      fadeObserver.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.1 });
+fadeEls.forEach(el => fadeObserver.observe(el));
+
+// ─── TABS ───
+function switchTab(name) {
+  document.querySelectorAll('.tab-btn').forEach((b, i) => {
+    b.classList.toggle('active', ['primary','secondary','advanced'][i] === name);
+  });
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+}
+
+// ─── CODE RUNNER ───
+function runCode() {
+  const out = document.getElementById('output-text');
+  out.innerHTML = '<span style="color:#ffd54f">» Running fibonacci(10)...</span><br>';
+  const sequence = [0, 1];
+  while (sequence.length < 10) {
+    sequence.push(sequence[sequence.length-1] + sequence[sequence.length-2]);
+  }
+  const sum = sequence.reduce((a,b) => a+b, 0);
+
+  let i = 0;
+  const lines = [
+    `<span style="color:#9cdcfe">Sequence:</span> [${sequence.join(', ')}]`,
+    `<span style="color:#9cdcfe">Sum:</span>      ${sum}`,
+    ``,
+    `<span style="color:#28c840">✓ Execution complete in 0.003s</span>`,
+    `<span style="color:#ffd54f">★ +150 Quest Points earned!</span>`
+  ];
+
+  function typeLine() {
+    if (i < lines.length) {
+      out.innerHTML += lines[i] + '<br>';
+      i++;
+      setTimeout(typeLine, 260);
+    } else {
+      out.innerHTML += '<span class="output-cursor"></span>';
+    }
+  }
+  setTimeout(typeLine, 400);
+}
+
+// ─── MODAL ───
+function openLicense() {
+  document.getElementById('licenseModal').style.display = 'flex';
+}
+
+function closeLicense() {
+  document.getElementById('licenseModal').style.display = 'none';
+}
+document.getElementById('enrollModal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+</script>
+</body>
+</html>
