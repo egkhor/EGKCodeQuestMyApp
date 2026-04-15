@@ -197,11 +197,40 @@
     animation: fadeUp 1s 0.4s ease both;
   }
 
-  .hero-btns {
-    display: flex; gap: 16px; flex-wrap: wrap; justify-content: center;
-    animation: fadeUp 1s 0.55s ease both;
-    margin-bottom: 60px;
-  }
+.hero-btns {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;           /* ← This fixes vertical alignment */
+  animation: fadeUp 1s 0.55s ease both;
+  margin-bottom: 60px;
+}
+
+/* Make App Store badge consistent with buttons */
+.app-store-badge {
+  display: inline-flex;
+  align-items: center;
+  background: #000;
+  color: #fff;
+  padding: 6px 12px;             /* reduced padding */
+  border-radius: 12px;
+  text-decoration: none;
+  border: 1px solid rgba(255,255,255,0.15);
+  transition: all 0.3s;
+  height: 52px;                  /* match button height */
+  box-sizing: border-box;
+}
+
+.app-store-badge:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0 25px rgba(0, 122, 255, 0.6);
+}
+
+.app-store-badge img {
+  height: 40px;                  /* standard Apple badge height */
+  width: auto;
+}
   .btn-primary {
     background: linear-gradient(135deg, #1a6cff, #003ecc);
     color: #fff;
@@ -1008,19 +1037,36 @@
   </p>
   <div class="hero-best">💡 Best for Digital Skills — Malaysia Madani Ready</div>
 
-  <div class="hero-btns">
-      <a href="https://drive.google.com/drive/folders/1PM4pMIM194AYEhGRHV-1sN944qY93YDE?usp=sharing" class="btn-primary" target="_blank">
-        ⬇ Download App
-      </a>
-  <!-- App Store Badge -->
-  <a href="https://apps.apple.com/us/app/egk-codequest-malaysia/id6761986764" target="_blank" class="app-store-badge" style="margin-top: 20px;">
-    <img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg" alt="Download on the App Store">
+<div class="hero-btns" style="align-items: center;">
+  <!-- Primary Download Button (App Store) -->
+  <a href="https://apps.apple.com/us/app/egk-codequest-malaysia/id6761986764" 
+     class="btn-primary" 
+     target="_blank" 
+     style="text-decoration: none;">
+    ⬇ Download on App Store
   </a>
-      <a href="https://buy.stripe.com/dRm00i7fz5933Izbbf6Zy0m" class="btn-secondary" target="_blank">
-        🔑 Buy License Key
-      </a>
-    <a href="#features" class="btn-secondary">Explore Platform</a>
-  </div>
+
+  <!-- Official Apple App Store Badge (smaller & consistent) -->
+  <a href="https://apps.apple.com/us/app/egk-codequest-malaysia/id6761986764" 
+     target="_blank" 
+     class="app-store-badge">
+    <img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg" 
+         alt="Download on the App Store" 
+         style="height: 42px;">
+  </a>
+
+  <!-- License Key Button -->
+  <a href="https://buy.stripe.com/dRm00i7fz5933Izbbf6Zy0m" 
+     class="btn-secondary" 
+     target="_blank">
+    🔑 Buy License Key
+  </a>
+
+  <!-- Explore Button -->
+  <a href="#features" class="btn-secondary">
+    Explore Platform
+  </a>
+</div>
 
 
 
